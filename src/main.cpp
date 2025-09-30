@@ -73,6 +73,8 @@ void game()
         string full_text;
         full_text = "(" + pl1_name + ") score: " + to_string(score_pl1_short);
         score_pl1_text->setText(full_text);
+
+        
     });
     
 

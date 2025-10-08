@@ -2,7 +2,7 @@ Button {
     TextColor = rgb(255, 255, 255);             // text
     TextColorHover = rgb(255, 255, 255);        // text
     TextColorDownHover = rgb(255, 255, 255);    // text
-    Font = "C:/Programs/.github/Drop-it-or-Die/src/fonts/Hero-Bold.ttf";   // Font
+    Font = "C:/Programs/.github/Drop-it-or-Die-Cpp/src/fonts/Hero-Bold.ttf";   // Font
 }
 
 gd_button : Button {

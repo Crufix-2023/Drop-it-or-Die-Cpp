@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <cmath>
+#include <random>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -19,18 +20,36 @@ using namespace sf;
 
 
 // variables
-static short score_pl1_short = 0, score_pl2_short = 0, number_cube1_pl1, number_cube2_pl1, number_cube1_pl2, number_cube2_pl2;
-static string pl1_name = "pl1", pl2_name = "pl2";
+static short score_pl1_short = 0, score_pl2_short = 0, number_cube1_pl1, number_cube2_pl1, number_cube1_pl2, number_cube2_pl2, sdf;
+static string pl1_name = "pl1", pl2_name = "pl2", full_text;
 
 
-void game();
+void randi(int& result, int one, int two) {
+    random_device rd;
+    mt19937 rand(rd());
 
-// main func
-int main() {
-    game();
+    uniform_int_distribution<int> dist(one, two);
+
+    result = dist(rand);
+}
+void randsh(short& result, short one, short two) {
+    random_device rd;
+    mt19937 rand(rd());
+
+    uniform_int_distribution<short> dist(one, two);
+
+    result = dist(rand);
 }
 
-void game()
+
+
+void play() {
+    randsh(number_cube1_pl1, 1, 6);
+    cout << number_cube1_pl1 << endl;
+}
+
+
+int main()
 {
     RenderWindow window{VideoMode{ {1024, 512} }, "Drop it or Die"};
     window.setFramerateLimit(60);
@@ -70,10 +89,9 @@ void game()
     
     btn_tap->onPress([&]{
         score_pl1_short++;
-        string full_text;
         full_text = "(" + pl1_name + ") score: " + to_string(score_pl1_short);
         score_pl1_text->setText(full_text);
-
+        play();
         
     });
     

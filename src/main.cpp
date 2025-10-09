@@ -83,11 +83,18 @@ void randf(float& result, float one, float two) {
 
 void play() {
     randsh(number_cube1_pl1, 1, 6);
+    randsh(number_cube2_pl1, 1, 6);
+
+    randsh(number_cube1_pl2, 1, 6);
+    randsh(number_cube2_pl2, 1, 6);
+
+    number_cubes_pl1 = number_cube1_pl1 + number_cube2_pl1;
+    number_cubes_pl2 = number_cube1_pl2 + number_cube2_pl2;
+
+    cout << "pl1: " << number_cubes_pl1 << " | pl2: " << number_cubes_pl2 << endl;
 }
 
 
-int main()
-{
 int main() {
     RenderWindow window{VideoMode{ {1024, 512} }, "Drop it or Die"};
     window.setFramerateLimit(60);
@@ -129,6 +136,21 @@ int main() {
         
         play();
         
+        if (number_cubes_pl1 > number_cubes_pl2) {
+            score_pl1_short++;
+            full_text_1 = "(" + pl1_name + ") score: " + to_string(score_pl1_short);
+            score_pl1_text->setText(full_text_1);
+            cout << "pl1 win" << endl;
+        }
+        if (number_cubes_pl1 < number_cubes_pl2) {
+            score_pl2_short++;
+            full_text_2 = "(" + pl2_name + ") score: " + to_string(score_pl2_short);
+            score_pl2_text->setText(full_text_2);
+            cout << "pl2 win" << endl;
+        }
+        if (number_cubes_pl1 == number_cubes_pl2)  {
+            cout << "draw" << endl;
+        }
     });
     
     

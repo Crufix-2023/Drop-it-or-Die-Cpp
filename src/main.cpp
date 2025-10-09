@@ -29,6 +29,8 @@ static short score_pl1_short = 0, score_pl2_short = 0, \
 
 static string pl1_name = "pl1", pl2_name = "pl2", full_text_1, full_text_2;
 
+string who_win_mass[] = { "pl1 win", "pl2 win", "draw" }, who_win;
+
 
 /* timer()
 вызов таймера: timer(2.9); | где timer() - функция, а 2.9 - время в секундах
@@ -91,7 +93,17 @@ void play() {
     number_cubes_pl1 = number_cube1_pl1 + number_cube2_pl1;
     number_cubes_pl2 = number_cube1_pl2 + number_cube2_pl2;
 
-    cout << "pl1: " << number_cubes_pl1 << " | pl2: " << number_cubes_pl2 << endl;
+    if (number_cubes_pl1 > number_cubes_pl2) {
+        who_win = who_win_mass[0];
+    }
+    if (number_cubes_pl1 < number_cubes_pl2) {
+        who_win = who_win_mass[1];
+    }
+    if (number_cubes_pl1 == number_cubes_pl2) {
+        who_win = who_win_mass[2];
+    }
+
+    cout << "pl1: " << number_cubes_pl1 << " | pl2: " << number_cubes_pl2 << " == " << who_win << "\n--------------------------------\n" << endl;
 }
 
 
@@ -141,16 +153,14 @@ int main() {
             score_pl1_short++;
             full_text_1 = "(" + pl1_name + ") score: " + to_string(score_pl1_short);
             score_pl1_text->setText(full_text_1);
-            cout << "pl1 win" << endl;
         }
         if (number_cubes_pl1 < number_cubes_pl2) {
             score_pl2_short++;
             full_text_2 = "(" + pl2_name + ") score: " + to_string(score_pl2_short);
             score_pl2_text->setText(full_text_2);
-            cout << "pl2 win" << endl;
         }
         if (number_cubes_pl1 == number_cubes_pl2)  {
-            cout << "draw" << endl;
+
         }
     });
     

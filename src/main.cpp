@@ -82,7 +82,6 @@ void randf(float& result, float one, float two) {
 }
 
 
-
 void play() {
     randsh(number_cube1_pl1, 1, 6);
     randsh(number_cube2_pl1, 1, 6);
@@ -108,7 +107,10 @@ void play() {
 
 
 int main() {
-    RenderWindow window{VideoMode{ {1024, 512} }, "Drop it or Die"};
+    const float originalWidth = 1024.0f;
+    const float originalHeight = 512.0f;
+    
+    RenderWindow window{VideoMode{ {static_cast<unsigned int>(originalWidth), static_cast<unsigned int>(originalHeight)} }, "Drop it or Die"};
     window.setFramerateLimit(60);
     Gui gui{window};
 
@@ -120,37 +122,40 @@ int main() {
     auto glass_up = tgui::Texture("./assets/textures/game/cup/glass_up.png");
     auto glass_down = tgui::Texture("./assets/textures/game/cup/glass_down.png");
 
+    // Исходные позиции (в пикселях от 1024x512)
+    struct WidgetPosition {
+        float x, y, width, height;
+    };
+
+    WidgetPosition positions[] = {
+        {558, 426, 150, 150},  // cup_pl1
+        {467, 86, 150, 150},   // cup_pl2
+        {372, 446, 100, 100},  // left_hand_pl1
+        {652, 451, 100, 100},  // right_hand_pl1
+        {652, 106, 100, 100},  // left_hand_pl2
+        {372, 109, 100, 100},  // right_hand_pl2
+        {512, 256, 150, 70}    // btn_tap
+    };
+
+
+    // Widgets
     auto cup_pl1 = tgui::Picture::create(glass_up); gui.add(cup_pl1);
     cup_pl1->setOrigin(0.5, 0.5);
-    cup_pl1->setSize(150, 150); //("14,64%", "29,29%");
-    cup_pl1->setPosition("54,39%", "83,2%");
 
     auto cup_pl2 = tgui::Picture::create(glass_up); gui.add(cup_pl2);
     cup_pl2->setOrigin(0.5, 0.5);
-    cup_pl2->setSize(150, 150); //("14,64%", "29,29%");
-    cup_pl2->setPosition("45,61%", "16,8%");
 
     auto left_hand_pl1 = tgui::Picture::create(texture_hand_pl1); gui.add(left_hand_pl1);
     left_hand_pl1->setOrigin(0.5, 0.5);
-    left_hand_pl1->setSize(100, 100);
-    left_hand_pl1->setPosition("36,33%", "87,11%");
-    //left_hand_pl1->getRenderer()->setTexture("image2.png");
 
     auto right_hand_pl1 = tgui::Picture::create(texture_hand_pl1); gui.add(right_hand_pl1);
     right_hand_pl1->setOrigin(0.5, 0.5);
-    right_hand_pl1->setSize(100, 100);
-    right_hand_pl1->setPosition("63,67%", "88,08%");
 
     auto left_hand_pl2 = tgui::Picture::create(texture_hand_pl2); gui.add(left_hand_pl2);
     left_hand_pl2->setOrigin(0.5, 0.5);
-    left_hand_pl2->setSize(100, 100);
-    left_hand_pl2->setPosition("63,67%", "20,70%");
 
     auto right_hand_pl2 = tgui::Picture::create(texture_hand_pl2); gui.add(right_hand_pl2);
     right_hand_pl2->setOrigin(0.5, 0.5);
-    right_hand_pl2->setSize(100, 100);
-    right_hand_pl2->setPosition("36,33%", "21,29%");
-
 
     // pl1 score
     auto score_pl1_text = tgui::Label::create(); gui.add(score_pl1_text);
@@ -174,13 +179,11 @@ int main() {
     score_pl2_text->setTextSize(16);
     score_pl2_text->setOrigin(1, 0);
 
-    // center button5
+    // center button
     auto btn_tap = Button::create("Click me!"); gui.add(btn_tap);
     btn_tap->setRenderer(theme->getRenderer("gd_button"));
-    btn_tap->setSize(150, 70);
     btn_tap->setTextSize(28);
     btn_tap->setOrigin(0.5, 0.5);
-    btn_tap->setPosition("50%", "50%"); // center window - origin
     
     btn_tap->onPress([&]{
         
@@ -196,12 +199,51 @@ int main() {
             full_text_2 = "(" + pl2_name + ") score: " + to_string(score_pl2_short);
             score_pl2_text->setText(full_text_2);
         }
-        if (number_cubes_pl1 == number_cubes_pl2)  {
-
-        }
     });
-    
-    
+
+    auto updateWidgetsLayout = [&]() {
+        float currentWidth = gui.getView().getWidth();
+        float currentHeight = gui.getView().getHeight();
+        
+        float scaleX = currentWidth / originalWidth;
+        float scaleY = currentHeight / originalHeight;
+        float scale = std::min(scaleX, scaleY);
+        
+        float offsetX = (currentWidth - (originalWidth * scale)) / 2.0f;
+        float offsetY = (currentHeight - (originalHeight * scale)) / 2.0f;
+        
+        cup_pl1->setSize(positions[0].width * scale, positions[0].height * scale);
+        cup_pl1->setPosition(offsetX + (positions[0].x * scale), offsetY + (positions[0].y * scale));
+        
+        cup_pl2->setSize(positions[1].width * scale, positions[1].height * scale);
+        cup_pl2->setPosition(offsetX + (positions[1].x * scale), offsetY + (positions[1].y * scale));
+        
+        left_hand_pl1->setSize(positions[2].width * scale, positions[2].height * scale);
+        left_hand_pl1->setPosition(offsetX + (positions[2].x * scale), offsetY + (positions[2].y * scale));
+        
+        right_hand_pl1->setSize(positions[3].width * scale, positions[3].height * scale);
+        right_hand_pl1->setPosition(offsetX + (positions[3].x * scale), offsetY + (positions[3].y * scale));
+        
+        left_hand_pl2->setSize(positions[4].width * scale, positions[4].height * scale);
+        left_hand_pl2->setPosition(offsetX + (positions[4].x * scale), offsetY + (positions[4].y * scale));
+        
+        right_hand_pl2->setSize(positions[5].width * scale, positions[5].height * scale);
+        right_hand_pl2->setPosition(offsetX + (positions[5].x * scale), offsetY + (positions[5].y * scale));
+        
+        btn_tap->setSize(positions[6].width * scale, positions[6].height * scale);
+        btn_tap->setPosition(offsetX + (positions[6].x * scale), offsetY + (positions[6].y * scale));
+        
+        unsigned int textSize = static_cast<unsigned int>(16 * scale);
+        score_pl1_text->setTextSize(textSize);
+        score_pl2_text->setTextSize(textSize);
+        btn_tap->setTextSize(static_cast<unsigned int>(28 * scale));
+    };
+
+    updateWidgetsLayout();
+
+    gui.onViewChange([&]{
+        updateWidgetsLayout();
+    });
     
     while (window.isOpen())
     {

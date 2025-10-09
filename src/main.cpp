@@ -56,12 +56,12 @@ void randf(float& result, float one, float two) {
 
 void play() {
     randsh(number_cube1_pl1, 1, 6);
-    cout << number_cube1_pl1 << endl;
 }
 
 
 int main()
 {
+int main() {
     RenderWindow window{VideoMode{ {1024, 512} }, "Drop it or Die"};
     window.setFramerateLimit(60);
     Gui gui{window};
@@ -99,15 +99,11 @@ int main()
     btn_tap->setPosition("50%", "50%"); // center window - origin
     
     btn_tap->onPress([&]{
-        score_pl1_short++;
-        full_text = "(" + pl1_name + ") score: " + to_string(score_pl1_short);
-        score_pl1_text->setText(full_text);
+        
         play();
         
     });
     
-
-
     
     
     while (window.isOpen())

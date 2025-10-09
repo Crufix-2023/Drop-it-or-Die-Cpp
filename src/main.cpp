@@ -20,9 +20,12 @@ using namespace sf;
 
 
 // variables
-static short score_pl1_short = 0, score_pl2_short = 0, number_cube1_pl1, number_cube2_pl1, number_cube1_pl2, number_cube2_pl2, sdf;
-static string pl1_name = "pl1", pl2_name = "pl2", full_text;
+static short score_pl1_short = 0, score_pl2_short = 0, \
+             number_cube1_pl1, number_cube1_pl2, \
+             number_cube2_pl1, number_cube2_pl2, \
+             number_cubes_pl1, number_cubes_pl2;
 
+static string pl1_name = "pl1", pl2_name = "pl2", full_text_1, full_text_2;
 
 void randi(int& result, int one, int two) {
     random_device rd;

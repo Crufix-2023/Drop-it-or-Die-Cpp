@@ -115,6 +115,43 @@ int main() {
     auto theme = tgui::Theme::create("./assets/themes/theme.txt");
     auto font = "./assets/fonts/Hero-Bold.ttf";
 
+    auto texture_hand_pl1 = tgui::Texture("./assets/textures/game/hands/hand_blue.png");
+    auto texture_hand_pl2 = tgui::Texture("./assets/textures/game/hands/hand_red.png");
+    auto glass_up = tgui::Texture("./assets/textures/game/cup/glass_up.png");
+    auto glass_down = tgui::Texture("./assets/textures/game/cup/glass_down.png");
+
+    auto cup_pl1 = tgui::Picture::create(glass_up); gui.add(cup_pl1);
+    cup_pl1->setOrigin(0.5, 0.5);
+    cup_pl1->setSize(150, 150); //("14,64%", "29,29%");
+    cup_pl1->setPosition("54,39%", "83,2%");
+
+    auto cup_pl2 = tgui::Picture::create(glass_up); gui.add(cup_pl2);
+    cup_pl2->setOrigin(0.5, 0.5);
+    cup_pl2->setSize(150, 150); //("14,64%", "29,29%");
+    cup_pl2->setPosition("45,61%", "16,8%");
+
+    auto left_hand_pl1 = tgui::Picture::create(texture_hand_pl1); gui.add(left_hand_pl1);
+    left_hand_pl1->setOrigin(0.5, 0.5);
+    left_hand_pl1->setSize(100, 100);
+    left_hand_pl1->setPosition("36,33%", "87,11%");
+    //left_hand_pl1->getRenderer()->setTexture("image2.png");
+
+    auto right_hand_pl1 = tgui::Picture::create(texture_hand_pl1); gui.add(right_hand_pl1);
+    right_hand_pl1->setOrigin(0.5, 0.5);
+    right_hand_pl1->setSize(100, 100);
+    right_hand_pl1->setPosition("63,67%", "88,08%");
+
+    auto left_hand_pl2 = tgui::Picture::create(texture_hand_pl2); gui.add(left_hand_pl2);
+    left_hand_pl2->setOrigin(0.5, 0.5);
+    left_hand_pl2->setSize(100, 100);
+    left_hand_pl2->setPosition("63,67%", "20,70%");
+
+    auto right_hand_pl2 = tgui::Picture::create(texture_hand_pl2); gui.add(right_hand_pl2);
+    right_hand_pl2->setOrigin(0.5, 0.5);
+    right_hand_pl2->setSize(100, 100);
+    right_hand_pl2->setPosition("36,33%", "21,29%");
+
+
     // pl1 score
     auto score_pl1_text = tgui::Label::create(); gui.add(score_pl1_text);
     string full_text_pl1_score = "(" + pl1_name + ") score: " + to_string(score_pl1_short);

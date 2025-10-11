@@ -46,8 +46,8 @@ def main():
     
     if event_type == 'branch':
         message = (
-            f'🔨 <b>New branch created to</b> [<a href="{repo_url}">{repo_name_escaped}</a>]
-            • <a href="{repo_url}/tree/{ref_name}">{ref_name_escaped}</a> by {sender_name_escaped}'
+            f'🔨 <b>New branch created to</b> [<a href="{repo_url}">{repo_name_escaped}</a>]'
+            f'• <a href="{repo_url}/tree/{ref_name}">{ref_name_escaped}</a> by {sender_name_escaped}'
         )
     
     elif event_type == 'tag':
@@ -64,6 +64,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 

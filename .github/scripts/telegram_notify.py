@@ -64,7 +64,7 @@ def main():
     elif event_type == 'tag':
         message = (
             f'🏷️ <b>New tag created in</b> [<a href="{repo_url}">{repo_name_escaped}</a>]\n'
-            f'• <a href="{repo_url}/releases/tag/{ref_name}">{ref_name_escaped}</a> by {sender_name_escaped}'
+            f'• [<a href="{repo_url}/releases/tag/{ref_name}">{ref_name_escaped}</a>] by {sender_name_escaped}'
         )
     
     else:
@@ -78,6 +78,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 

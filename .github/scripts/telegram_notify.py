@@ -46,12 +46,15 @@ def main():
     
     if event_type == 'branch':
         message = (
-            f'🔨 <b>New branch created to</b> [<a href="{repo_url}">{repo_name_escaped}</a>] \n'
+            f'🔨 <b>New branch created in</b> [<a href="{repo_url}">{repo_name_escaped}</a>] <br>'
             f'• <a href="{repo_url}/tree/{ref_name}">{ref_name_escaped}</a> by {sender_name_escaped}'
         )
     
     elif event_type == 'tag':
-        message = f'🏷️ <b>[<a href="{repo_url}">{repo_name_escaped}</a>] New tag created: <a href="{repo_url}/releases/tag/{ref_name}">{ref_name_escaped}</a> by {sender_name_escaped}</b>'
+        message = (
+            f'🏷️ <b>New tag created in</b> [<a href="{repo_url}">{repo_name_escaped}</a>] <br>'
+            f'• <a href="{repo_url}/releases/tag/{ref_name}">{ref_name_escaped}</a> by {sender_name_escaped}'
+        )
     
     else:
         print(f"Unhandled create event type: {event_type}")
@@ -64,6 +67,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 

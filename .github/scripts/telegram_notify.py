@@ -31,8 +31,11 @@ def main():
     ref_name = event_data.get('ref', '')
     repo_name = event_data['repository']['full_name']
     repo_url = event_data['repository']['html_url']
-    sender_name = event_data['sender']['login']
+
+    # Получаем данные отправителя
+    sender_login = event_data['sender']['login']
     sender_url = event_data['sender']['html_url']
+    sender_name = event_data['sender'].get('name', sender_login)  # Используем имя, если есть, иначе логин
     
     # Экранируем HTML символы
     ref_name_escaped = html.escape(ref_name)
@@ -42,7 +45,8 @@ def main():
     message = None
     
     if event_type == 'branch':
-        message = f'🔨 <b>[<a href="{repo_url}">{repo_name_escaped}</a>] New branch created: <a href="{repo_url}/tree/{ref_name}">{ref_name_escaped}</a> by {sender_name_escaped}</b>'
+        message = f'🔨 <b>New branch created to</b> [<a href="{repo_url}">{repo_name_escaped}</a>]
+        • <a href="{repo_url}/tree/{ref_name}">{ref_name_escaped}</a> by {sender_name_escaped}'
     
     elif event_type == 'tag':
         message = f'🏷️ <b>[<a href="{repo_url}">{repo_name_escaped}</a>] New tag created: <a href="{repo_url}/releases/tag/{ref_name}">{ref_name_escaped}</a> by {sender_name_escaped}</b>'
@@ -58,5 +62,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 

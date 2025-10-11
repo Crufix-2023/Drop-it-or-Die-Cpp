@@ -5,7 +5,7 @@ jobs:
   create-notify:
     name: Custom Create Notification
     runs-on: ubuntu-latest
-    if: github.event_name == 'create' || 'push'
+    if: github.event_name == 'create'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -29,7 +29,8 @@ jobs:
     name: Default Notification
     runs-on: ubuntu-latest
     if: |
-      github.event_name != 'create' || 'push'
+      github.event_name != 'create' && 
+      (github.event_name != 'push' || github.event.created == false)
     steps:
       - name: Notify via EverythingSuckz Action
         uses: EverythingSuckz/github-telegram-notify@main

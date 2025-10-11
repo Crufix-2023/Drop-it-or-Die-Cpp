@@ -4,6 +4,16 @@ import json
 import requests
 import html
 
+def get_user_name(login):
+    url = f"https://api.github.com/users/{login}"
+    response = requests.get(url)
+    
+    if response.status_code == 200:
+        user_data = response.json()
+        return user_data.get('name', login)  # Возвращаем имя или логин, если имя не указано
+    else:
+        return login  # Возвращаем логин при ошибке запроса
+
 def send_telegram_message(message, parse_mode='HTML'):
     bot_token = os.getenv('TELEGRAM_BOT_TOKEN')
     chat_id = os.getenv('TELEGRAM_CHAT_ID')
@@ -34,8 +44,9 @@ def main():
 
     # Получаем данные отправителя
     sender_login = event_data['sender']['login']
-    sender_url = event_data['sender']['html_url']
-    sender_name = event_data['sender'].get('name', sender_login)  # Используем имя, если есть, иначе логин
+    
+    # Получаем полное имя пользователя через API
+    sender_name = get_user_name(sender_login)
     
     # Экранируем HTML символы
     ref_name_escaped = html.escape(ref_name)
@@ -67,6 +78,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 

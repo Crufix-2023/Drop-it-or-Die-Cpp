@@ -57,13 +57,13 @@ def main():
     
     if event_type == 'branch':
         message = (
-            f'🔨 <b>New branch created in</b> [<a href="{repo_url}">{repo_name_escaped}</a>] <br>'
+            f'🔨 <b>New branch created in</b> [<a href="{repo_url}">{repo_name_escaped}</a>] <br></br>'
             f'• <a href="{repo_url}/tree/{ref_name}">{ref_name_escaped}</a> by {sender_name_escaped}'
         )
     
     elif event_type == 'tag':
         message = (
-            f'🏷️ <b>New tag created in</b> [<a href="{repo_url}">{repo_name_escaped}</a>] <br>'
+            f'🏷️ <b>New tag created in</b> [<a href="{repo_url}">{repo_name_escaped}</a>] <br></br>'
             f'• <a href="{repo_url}/releases/tag/{ref_name}">{ref_name_escaped}</a> by {sender_name_escaped}'
         )
     
@@ -78,6 +78,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 

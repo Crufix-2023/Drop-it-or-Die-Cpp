@@ -128,7 +128,7 @@ int main() {
     auto glass_up = tgui::Texture("./assets/textures/game/cup/glass_up.png");
     auto glass_down = tgui::Texture("./assets/textures/game/cup/glass_down.png");
 
-    // Исходные позиции (в пикселях от 1024x512)
+    // Исходные позиции в пикселях от 1024x512
     struct WidgetPosition {
         float x, y, width, height;
     };

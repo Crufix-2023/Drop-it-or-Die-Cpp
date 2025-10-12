@@ -41,6 +41,10 @@ def format_commit_message(commit_message, max_length=50):
         return message[:max_length] + '...'
     return message
 
+def is_merge_commit(commit_message):
+    """Проверяет, является ли коммит merge-коммитом"""
+    return commit_message.startswith("Merge branch") or commit_message.startswith("Merge pull request")
+
 def main():
     event_path = os.getenv('GITHUB_EVENT_PATH')
     
@@ -149,6 +153,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 

@@ -34,13 +34,6 @@ def send_telegram_message(message, parse_mode='HTML', reply_markup=None):
     response = requests.post(url, json=payload)
     return response.json()
 
-def format_commit_message(commit_message, max_length=50):
-    """Форматирует сообщение коммита, обрезает если слишком длинное"""
-    message = commit_message.split('\n')[0]  # Берем первую строку
-    if len(message) > max_length:
-        return message[:max_length] + '...'
-    return message
-
 def is_merge_commit(commit_message):
     """Проверяет, является ли коммит merge-коммитом"""
     return commit_message.startswith("Merge branch") or commit_message.startswith("Merge pull request")
@@ -80,7 +73,7 @@ def main():
             
             for i, commit in enumerate(regular_commits[-10:]):
                 commit_id = commit.get('id', '')[:7]
-                commit_message = format_commit_message(commit.get('message', ''))
+                commit_message = commit.get('message', '')
                 commit_url = commit.get('url', '')
                 commit_message_escaped = html.escape(commit_message)
                 commit_author = commit.get('author', {}).get('name', sender_name_escaped)
@@ -149,6 +142,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 

@@ -31,6 +31,13 @@ def send_telegram_message(message, parse_mode='HTML'):
     response = requests.post(url, json=payload)
     return response.json()
 
+def format_commit_message(commit_message, max_length=50):
+    """Форматирует сообщение коммита, обрезает если слишком длинное"""
+    message = commit_message.split('\n')[0]  # Берем первую строку
+    if len(message) > max_length:
+        return message[:max_length] + '...'
+    return message
+
 def main():
     event_path = os.getenv('GITHUB_EVENT_PATH')
     
@@ -54,23 +61,29 @@ def main():
         ref = event_data.get('ref', '')
         branch_name = ref.replace('refs/heads/', '')
         commits = event_data.get('commits', [])
+        total_commits = len(commits)
         
         if commits:
-            # Берем последний коммит
-            latest_commit = commits[-1]
-            commit_id = latest_commit.get('id', '')[:7]
-            commit_message = latest_commit.get('message', '').split('\n')[0]  # Первая строка сообщения
-            commit_url = latest_commit.get('url', '')
-            
-            # Экранируем текст коммита
-            commit_message_escaped = html.escape(commit_message)
             branch_name_escaped = html.escape(branch_name)
             
+            # Формируем список коммитов
+            commits_text = ""
+            for i, commit in enumerate(commits[-10:]):  # Показываем последние 10 коммитов
+                commit_id = commit.get('id', '')[:7]
+                commit_message = format_commit_message(commit.get('message', ''))
+                commit_url = commit.get('url', '')
+                commit_message_escaped = html.escape(commit_message)
+                
+                commits_text += f"• <a href=\"{commit_url}\">{commit_id}</a> - {commit_message_escaped} by {sender_name_escaped}\n"
+            
+            # Если коммитов больше 10, показываем количество скрытых
+            commit_text = "commit"
+            if total_commit > 1:
+                
+            
             message = (
-                f'📥 <b>Push to</b> <a href="{repo_url}">{repo_name_escaped}</a>\n'
-                f'• Branch: <a href="{repo_url}/tree/{branch_name}">{branch_name_escaped}</a>\n'
-                f'• Commit: <a href="{commit_url}">{commit_id}</a> - {commit_message_escaped}\n'
-                f'• By: {sender_name_escaped}'
+                f'📥 <b>🔨 {total_commits} New {commit_text} to</b> <a href="{repo_url}">{repo_name_escaped}</a>[{branch_name_escaped}]\n'
+                f'{commits_text}'
             )
     
     elif event_name == 'create':

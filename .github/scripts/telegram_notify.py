@@ -58,6 +58,7 @@ def main():
     sender_name_escaped = html.escape(sender_name)
     
     message = None
+    reply_markup = None
 
     if event_name == 'push':
         # Данные для push события
@@ -127,6 +128,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 

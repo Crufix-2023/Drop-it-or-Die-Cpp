@@ -80,10 +80,20 @@ def main():
             commit_text = "commit"
             if total_commits > 1:
                 commit_text = "commits"
-                
+
+            # Создаем кнопку со ссылкой на сравнение коммитов
+            compare_url = f"{repo_url}/compare/{commits[0]['id']}...{commits[-1]['id']}"
+            reply_markup = {
+                "inline_keyboard": [[
+                    {
+                        "text": "Open Changes",
+                        "url": compare_url
+                    }
+                ]]
+            }
             
             message = (
-                f'📥 <b>🔨 {total_commits} New {commit_text} to</b> <a href="{repo_url}">{repo_name_escaped}</a>[{branch_name_escaped}]\n'
+                f'📥 <b>🔨 {total_commits} New {commit_text} to</b> <a href="{repo_url}">{repo_name_escaped}</a>[{branch_name_escaped}]\n\n'
                 f'{commits_text}'
             )
     
@@ -114,5 +124,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 

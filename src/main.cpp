@@ -19,7 +19,6 @@ using namespace sf;
 
 /////////////////////
 
-
 // variables
 static short score_pl1_short = 0, score_pl2_short = 0, \
              number_cube1_pl1, number_cube1_pl2, \

@@ -101,7 +101,7 @@ def main():
         # Отправляем merge-коммиты отдельно
         for merge_commit in merge_commits:
             commit_id = merge_commit.get('id', '')[:7]
-            commit_message = format_commit_message(merge_commit.get('message', ''))
+            commit_message = merge_commit.get('message', '')
             commit_url = merge_commit.get('url', '')
             commit_message_escaped = html.escape(commit_message)
             commit_author = merge_commit.get('author', {}).get('name', sender_name_escaped)
@@ -142,6 +142,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 

@@ -14,7 +14,7 @@ def get_user_name(login):
     else:
         return login
 
-def send_telegram_message(message, parse_mode='HTML'):
+def send_telegram_message(message, parse_mode='HTML', reply_markup=None):
     bot_token = os.getenv('TELEGRAM_BOT_TOKEN')
     chat_id = os.getenv('TELEGRAM_CHAT_ID')
     topic_id = 6
@@ -27,6 +27,9 @@ def send_telegram_message(message, parse_mode='HTML'):
         'parse_mode': parse_mode,
         'disable_web_page_preview': True
     }
+
+    if reply_markup:
+        payload['reply_markup'] = reply_markup
     
     response = requests.post(url, json=payload)
     return response.json()
@@ -124,6 +127,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 

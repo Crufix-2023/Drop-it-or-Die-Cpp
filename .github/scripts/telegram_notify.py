@@ -79,6 +79,7 @@ def main():
             # Если коммитов больше 10, показываем количество скрытых
             commit_text = "commit"
             if total_commit > 1:
+                commit_text = "commits"
                 
             
             message = (
@@ -113,3 +114,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

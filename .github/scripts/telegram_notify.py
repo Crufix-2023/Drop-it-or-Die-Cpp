@@ -41,6 +41,10 @@ def format_commit_message(commit_message, max_length=50):
         return message[:max_length] + '...'
     return message
 
+def is_merge_commit(commit_message):
+    """Проверяет, является ли коммит merge-коммитом"""
+    return commit_message.startswith("Merge branch") or commit_message.startswith("Merge pull request")
+
 def main():
     event_path = os.getenv('GITHUB_EVENT_PATH')
     
@@ -61,32 +65,32 @@ def main():
     reply_markup = None
 
     if event_name == 'push':
-        # Данные для push события
         ref = event_data.get('ref', '')
         branch_name = ref.replace('refs/heads/', '')
         commits = event_data.get('commits', [])
-        total_commits = len(commits)
         
-        if commits:
+        # Фильтруем коммиты (исключаем merge-коммиты)
+        regular_commits = [commit for commit in commits if not is_merge_commit(commit.get('message', ''))]
+        merge_commits = [commit for commit in commits if is_merge_commit(commit.get('message', ''))]
+        
+        # Отправляем обычные коммиты
+        if regular_commits:
             branch_name_escaped = html.escape(branch_name)
-            
-            # Формируем список коммитов
             commits_text = ""
-            for i, commit in enumerate(commits[-10:]):  # Показываем последние 10 коммитов
+            
+            for i, commit in enumerate(regular_commits[-10:]):
                 commit_id = commit.get('id', '')[:7]
                 commit_message = format_commit_message(commit.get('message', ''))
                 commit_url = commit.get('url', '')
                 commit_message_escaped = html.escape(commit_message)
+                commit_author = commit.get('author', {}).get('name', sender_name_escaped)
                 
-                commits_text += f"• <a href=\"{commit_url}\">{commit_id}</a> - {commit_message_escaped} by {sender_name_escaped}\n"
+                commits_text += f"• <a href=\"{commit_url}\">{commit_id}</a> - {commit_message_escaped} by {commit_author}\n"
             
-            # Если коммитов больше 10, показываем количество скрытых
-            commit_text = "commit"
-            if total_commits > 1:
-                commit_text = "commits"
-
-            # Создаем кнопку со ссылкой на сравнение коммитов
-            compare_url = f"{repo_url}/compare/{commits[0]['id']}...{commits[-1]['id']}"
+            total_regular_commits = len(regular_commits)
+            commit_text = "commit" if total_regular_commits == 1 else "commits"
+            
+            compare_url = f"{repo_url}/compare/{regular_commits[0]['id']}...{regular_commits[-1]['id']}"
             reply_markup = {
                 "inline_keyboard": [[
                     {
@@ -97,9 +101,26 @@ def main():
             }
             
             message = (
-                f'🔨 <b>{total_commits} New {commit_text} to</b> <a href="{repo_url}">{repo_name_escaped}</a>[{branch_name_escaped}]\n\n'
+                f'🔨 <b>{total_regular_commits} New {commit_text} to</b> <a href="{repo_url}">{repo_name_escaped}</a>[{branch_name_escaped}]\n\n'
                 f'{commits_text}'
             )
+            
+        # Отправляем merge-коммиты отдельно
+        for merge_commit in merge_commits:
+            commit_id = merge_commit.get('id', '')[:7]
+            commit_message = format_commit_message(merge_commit.get('message', ''))
+            commit_url = merge_commit.get('url', '')
+            commit_message_escaped = html.escape(commit_message)
+            commit_author = merge_commit.get('author', {}).get('name', sender_name_escaped)
+            
+            merge_message = (
+                f'🔄 <b>Merge commit to</b> <a href="{repo_url}">{repo_name_escaped}</a>[{html.escape(branch_name)}]\n\n'
+                f'• <a href="{commit_url}">{commit_id}</a> - {commit_message_escaped} by {commit_author}'
+            )
+            
+            print(f"Sending merge commit message: {merge_message}")
+            result = send_telegram_message(merge_message)
+            print(f"Telegram API response: {result}")
     
     elif event_name == 'create':
         # Данные для create события (ветки и теги)
@@ -128,6 +149,9 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+
 
 
 

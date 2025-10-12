@@ -96,7 +96,7 @@ def main():
             }
             
             message = (
-                f'📥 <b>🔨 {total_commits} New {commit_text} to</b> <a href="{repo_url}">{repo_name_escaped}</a>[{branch_name_escaped}]\n\n'
+                f'🔨 <b>{total_commits} New {commit_text} to</b> <a href="{repo_url}">{repo_name_escaped}</a>[{branch_name_escaped}]\n\n'
                 f'{commits_text}'
             )
     
@@ -120,13 +120,14 @@ def main():
     
     if message:
         print(f"Sending message: {message}")
-        result = send_telegram_message(message)
+        result = send_telegram_message(message, reply_markup=reply_markup)
         print(f"Telegram API response: {result}")
     else:
         print(f"No message generated for event: {event_name}")
 
 if __name__ == '__main__':
     main()
+
 
 
 

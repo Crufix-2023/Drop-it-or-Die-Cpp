@@ -10,9 +10,9 @@ def get_user_name(login):
     
     if response.status_code == 200:
         user_data = response.json()
-        return user_data.get('name', login)  # Возвращаем имя или логин, если имя не указано
+        return user_data.get('name', login)
     else:
-        return login  # Возвращаем логин при ошибке запроса
+        return login
 
 def send_telegram_message(message, parse_mode='HTML'):
     bot_token = os.getenv('TELEGRAM_BOT_TOKEN')
@@ -37,56 +37,66 @@ def main():
     with open(event_path, 'r') as f:
         event_data = json.load(f)
     
-    event_type = event_data.get('ref_type', '')
-    ref_name = event_data.get('ref', '')
+    event_name = os.getenv('GITHUB_EVENT_NAME')
     repo_name = event_data['repository']['full_name']
     repo_url = event_data['repository']['html_url']
-
-    # Получаем данные отправителя
     sender_login = event_data['sender']['login']
-    
-    # Получаем полное имя пользователя через API
     sender_name = get_user_name(sender_login)
     
     # Экранируем HTML символы
-    ref_name_escaped = html.escape(ref_name)
     repo_name_escaped = html.escape(repo_name)
     sender_name_escaped = html.escape(sender_name)
     
     message = None
+
+    if event_name == 'push':
+        # Данные для push события
+        ref = event_data.get('ref', '')
+        branch_name = ref.replace('refs/heads/', '')
+        commits = event_data.get('commits', [])
+        
+        if commits:
+            # Берем последний коммит
+            latest_commit = commits[-1]
+            commit_id = latest_commit.get('id', '')[:7]
+            commit_message = latest_commit.get('message', '').split('\n')[0]  # Первая строка сообщения
+            commit_url = latest_commit.get('url', '')
+            
+            # Экранируем текст коммита
+            commit_message_escaped = html.escape(commit_message)
+            branch_name_escaped = html.escape(branch_name)
+            
+            message = (
+                f'📥 <b>Push to</b> <a href="{repo_url}">{repo_name_escaped}</a>\n'
+                f'• Branch: <a href="{repo_url}/tree/{branch_name}">{branch_name_escaped}</a>\n'
+                f'• Commit: <a href="{commit_url}">{commit_id}</a> - {commit_message_escaped}\n'
+                f'• By: {sender_name_escaped}'
+            )
     
-    if event_type == 'branch':
-        message = (
-            f'🔨 <b>New branch created in</b> <a href="{repo_url}">{repo_name_escaped}</a>\n'
-            f'• [<a href="{repo_url}/tree/{ref_name}">{ref_name_escaped}</a>] by {sender_name_escaped}'
-        )
-    
-    elif event_type == 'tag':
-        message = (
-            f'🏷️ <b>New tag created in</b> [<a href="{repo_url}">{repo_name_escaped}</a>]\n'
-            f'• [<a href="{repo_url}/releases/tag/{ref_name}">{ref_name_escaped}</a>] by {sender_name_escaped}'
-        )
-    
-    else:
-        print(f"Unhandled create event type: {event_type}")
-        return
+    elif event_name == 'create':
+        # Данные для create события (ветки и теги)
+        event_type = event_data.get('ref_type', '')
+        ref_name = event_data.get('ref', '')
+        ref_name_escaped = html.escape(ref_name)
+        
+        if event_type == 'branch':
+            message = (
+                f'🔨 <b>New branch created in</b> <a href="{repo_url}">{repo_name_escaped}</a>\n'
+                f'• <a href="{repo_url}/tree/{ref_name}">{ref_name_escaped}</a> by {sender_name_escaped}'
+            )
+        
+        elif event_type == 'tag':
+            message = (
+                f'🏷️ <b>New tag created in</b> <a href="{repo_url}">{repo_name_escaped}</a>\n'
+                f'• <a href="{repo_url}/releases/tag/{ref_name}">{ref_name_escaped}</a> by {sender_name_escaped}'
+            )
     
     if message:
         print(f"Sending message: {message}")
         result = send_telegram_message(message)
         print(f"Telegram API response: {result}")
+    else:
+        print(f"No message generated for event: {event_name}")
 
 if __name__ == '__main__':
     main()
-
-
-
-
-
-
-
-
-
-
-
-

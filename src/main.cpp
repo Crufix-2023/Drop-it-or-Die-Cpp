@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-#include <cmath>
 #include <random>
 #include <chrono>
 #include <thread>

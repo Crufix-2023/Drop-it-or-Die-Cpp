@@ -105,10 +105,6 @@ def main():
                 f'{commits_text}'
             )
             
-            print(f"Sending regular commits message: {message}")
-            result = send_telegram_message(message, reply_markup=reply_markup)
-            print(f"Telegram API response: {result}")
-        
         # Отправляем merge-коммиты отдельно
         for merge_commit in merge_commits:
             commit_id = merge_commit.get('id', '')[:7]
@@ -153,6 +149,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 

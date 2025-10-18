@@ -83,15 +83,15 @@ def main():
             total_regular_commits = len(regular_commits)
             commit_text = "commit" if total_regular_commits == 1 else "commits"
             
-            compare_url = f"{repo_url}/compare/{regular_commits[0]['id']}...{regular_commits[-1]['id']}"
-            reply_markup = {
-                "inline_keyboard": [[
-                    {
-                        "text": "Open Changes",
-                        "url": compare_url
-                    }
-                ]]
-            }
+            #compare_url = f"{repo_url}/compare/{regular_commits[0]['id']}...{regular_commits[-1]['id']}"
+            #reply_markup = {
+            #    "inline_keyboard": [[
+            #        {
+            #            "text": "Open Changes",
+            #            "url": compare_url
+            #        }
+            #    ]]
+            #}
             
             message = (
                 f'🔨 <b>{total_regular_commits} New {commit_text} to</b> <a href="{repo_url}">{repo_name_escaped}</a>[{branch_name_escaped}]\n\n'
@@ -142,6 +142,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 

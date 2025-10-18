@@ -4,5 +4,5 @@
 #include <chrono>
 #include <thread>
 
-#include <TGUI/TGUI.hpp>
-#include <TGUI/Backend/SFML-Graphics.hpp>
+#include "sdk\TGUI-1.10\include\TGUI\TGUI.hpp"
+#include "sdk\TGUI-1.10\include\TGUI\Backend\SFML-Graphics.hpp"
